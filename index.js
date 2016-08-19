@@ -60,6 +60,21 @@ module.exports = function (opt) {
     });
   };
 
+  // Useful for scripts, or graceful shutdown of server
+  self.close = function(cb) {
+    if (!pool) return cb();
+
+    warn('closing connection pool');
+
+    if (typeof cb !== 'function') {
+      cb = function(err) {
+        if (err) warn ('error ocurred in closing connection pool:', err);
+      };
+    }
+
+    pool.end(cb);
+  };
+
   self.open();
 
   self.models = {};
