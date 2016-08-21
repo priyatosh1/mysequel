@@ -62,8 +62,6 @@ module.exports = function (opt) {
 
   // Useful for scripts, or graceful shutdown of server
   self.close = function(cb) {
-    if (!pool) return cb();
-
     warn('closing connection pool');
 
     if (typeof cb !== 'function') {
@@ -71,6 +69,8 @@ module.exports = function (opt) {
         if (err) warn ('error ocurred in closing connection pool:', err);
       };
     }
+
+    if (!pool) return cb();
 
     pool.end(cb);
   };
