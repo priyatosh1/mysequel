@@ -60,13 +60,18 @@ module.exports = function (opt) {
     });
   };
 
-  // Useful for scripts, or graceful shutdown of server
-  self.close = function(cb) {
-    warn('closing connection pool');
+  /**
+   * Terminates the connection pool. No more `.query()` or `.getConnection()` calls will be honoured after this.
+   * Useful when terminating from within scripts, or trying to gracefully restart servers.
+   * See: https://www.npmjs.com/package/mysql#closing-all-the-connections-in-a-pool
+   * @param {Function} cb called when the pool is terminated. Is passed to node-mysql's `pool.end()`.
+   */
+  self.terminatePool = function(cb) {
+    warn('terminating connection pool');
 
     if (typeof cb !== 'function') {
       cb = function(err) {
-        if (err) warn ('error ocurred in closing connection pool:', err);
+        if (err) warn ('error ocurred in terminating connection pool:', err);
       };
     }
 

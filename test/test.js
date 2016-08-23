@@ -7,7 +7,7 @@ describe('Basic', function() {
 
   before(function(done) {
     var dbConfig = { 
-      url: 'mysql://root:@:3306/information_schema',
+      url: 'mysql://root:paytm%40197@:3306/information_schema',
       connections: { min: 1, max: 2 }
     };
 
@@ -85,13 +85,13 @@ describe('Basic', function() {
       });
     });
 
-    it('should allow to call .close() on db', function (done) {
+    it('should allow to call .terminatePool() on db', function (done) {
       // This test cannot be run along with the tooBusy test case (previous).
       // Run them independently like so:
       // `mocha test/test -i --fgrep 'tooBusy'` # to run all but tooBusy
       // `mocha test/test -g 'close()'`         # to run only this test
-      db.close(function (err) {
-        console.log('db closed');
+      db.terminatePool(function (err) {
+        console.log('db connection pool terminated');
         assert(err == undefined);
         db.getConnection(function (err, conn) {
           assert (err.message == 'Pool is closed.');
